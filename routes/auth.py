@@ -20,7 +20,7 @@ def login():
         if user is not None:
             login_user(user)
             return redirect(safe_next_url(request.args.get("next")))
-        flash("Invalid username or password.", "error")
+        flash("Identifiant ou mot de passe incorrect.", "error")
     return render_template("login.html")
 
 
