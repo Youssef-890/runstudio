@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RunStudio — Cloud REPL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2" />
+  </head>
+  <body
+    data-authenticated="{{ 'true' if current_user.is_authenticated else 'false' }}"
+    data-user-id="{{ current_user.id if current_user.is_authenticated else '' }}"
+  >
+    <header class="site-header">
+      <div class="brand">
+        <img
+          src="{{ url_for('static', filename='assets/logo.png') }}"
+          alt=""
+          width="32"
+          height="32"
+          class="brand-logo"
+        />
+        <div class="brand-text">
+          <span class="brand-name">RunStudio</span>
+          <span class="brand-sub">Cloud REPL</span>
+        </div>
+      </div>
+      <nav class="site-nav">
+        {% if current_user.is_authenticated %}
+        <span class="nav-user">{{ current_user.username }}</span>
+        <a class="nav-link" href="{{ url_for('auth.logout') }}">Sign out</a>
+        {% else %}
+        <a class="nav-link" href="{{ url_for('auth.login') }}">Sign in</a>
+        <a class="nav-link nav-link-primary" href="{{ url_for('auth.register') }}">Create account</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar" aria-label="Script library">
+        <h2 class="sidebar-heading">Scripts</h2>
+        <label class="field-label" for="scriptTitle">Title</label>
+        <input
+          type="text"
+          id="scriptTitle"
+          class="field-input"
+          placeholder="Untitled"
+          autocomplete="off"
+        />
+
+        <label class="field-label" for="localScripts">This browser</label>
+        <p class="field-hint">Separate list per account on this device (not shared with other users).</p>
+        <select id="localScripts" class="field-select"></select>
+
+        {% if current_user.is_authenticated %}
+        <label class="field-label" for="cloudScripts">Your workspace</label>
+        <p class="field-hint">Saved on your account — not visible to others.</p>
+        <select id="cloudScripts" class="field-select"></select>
+        {% endif %}
+
+        <div class="sidebar-actions">
+          <button type="button" class="btn btn-secondary" id="saveLocal">Save local</button>
+          <button type="button" class="btn btn-secondary" id="loadLocal">Load local</button>
+          <button type="button" class="btn btn-secondary btn-danger-outline" id="deleteLocal">Delete local</button>
+          {% if current_user.is_authenticated %}
+          <button type="button" class="btn btn-secondary" id="refreshCloud">Refresh</button>
+          <button type="button" class="btn btn-secondary" id="saveCloud">Save to workspace</button>
+          <button type="button" class="btn btn-secondary" id="loadCloud">Load from workspace</button>
+          {% endif %}
+        </div>
+      </aside>
+
+      <div class="main-stack">
+        <div class="editor-toolbar">
+          <div class="toolbar-left">
+            <label class="sr-only" for="language">Language</label>
+            <select id="language" class="toolbar-select" aria-label="Language">
+              <option value="python" selected>Python</option>
+              <option value="javascript">JavaScript</option>
+              <option value="cpp">C++</option>
+            </select>
+            <label class="sr-only" for="execMode">Runtime</label>
+            <select id="execMode" class="toolbar-select" aria-label="Runtime">
+              <option value="server" selected>Server</option>
+              <option value="client">Browser</option>
+            </select>
+          </div>
+          <div class="toolbar-spacer"></div>
+          <button type="button" class="btn btn-run" id="run">
+            <span class="btn-run-glyph" aria-hidden="true">▶</span>
+            Run
+          </button>
+          <span class="run-status" id="status" aria-live="polite"></span>
+        </div>
+
+        <div class="editor-shell">
+          <textarea
+            id="editor"
+            class="code-editor"
+            spellcheck="false"
+            aria-label="Source code editor"
+            rows="1"
+          ></textarea>
+        </div>
+
+        <section class="terminal-panel" aria-label="Output">
+          <div class="terminal-chrome">
+            <span class="terminal-traffic" aria-hidden="true">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-amber"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+            </span>
+            <span class="terminal-title">Output</span>
+          </div>
+          <pre id="output" class="terminal-body" role="log"></pre>
+        </section>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <span>RunStudio</span>
+    </footer>
+
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}?v=7"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+# Virtual environments (do not submit — teacher runs install.bat)
+.venv/
+venv/
+step1_only/.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Local database (created on first run)
+database/app.db
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+desktop.ini

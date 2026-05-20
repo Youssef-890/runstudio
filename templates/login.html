@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign in — RunStudio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <img
+          src="{{ url_for('static', filename='assets/logo.png') }}"
+          alt=""
+          width="32"
+          height="32"
+          class="brand-logo"
+        />
+        <div class="brand-text">
+          <span class="brand-name">RunStudio</span>
+          <span class="brand-sub">Cloud REPL</span>
+        </div>
+      </div>
+      <nav class="site-nav">
+        <a class="nav-link" href="{{ url_for('index') }}">Editor</a>
+        <a class="nav-link nav-link-primary" href="{{ url_for('auth.register') }}">Create account</a>
+      </nav>
+    </header>
+    <main class="auth-wrap">
+      <h1>Sign in</h1>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+      {% endwith %}
+      <form method="post" action="{{ url_for('auth.login', next=request.args.get('next')) }}">
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-run">Sign in</button>
+      </form>
+      <p class="auth-links">No account? <a href="{{ url_for('auth.register') }}">Register</a></p>
+    </main>
+  </body>
+</html>
